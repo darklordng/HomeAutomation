@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Welcome "
+               android:layout_marginTop="30dp"
+               android:layout_marginLeft="25dp"
+               android:textSize="30sp"
+               android:textColor="@color/black"
+               android:textStyle="bold"/>
+
+           <TextView
+               android:id="@+id/shared_prefs_text_view"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="30dp"
+               android:layout_marginLeft="0dp"
+               android:textColor="@color/black"
+               android:textStyle="bold"
+               android:textSize="30sp"/>
+       </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <!-- Lights-->
+
+    <TextView
+        android:id="@+id/lights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lights"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="75dp"
+        android:layout_marginLeft="150dp"
+        android:textColor="@color/black" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="105dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+         <TextView
+             android:id="@+id/on_off"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="On/Off"
+             android:textSize="20sp"
+             android:textColor="@color/black" />
+
+         <Switch
+             android:id="@+id/lights_toggle_switch"
+             android:layout_width="wrap_content"
+             android:layout_marginLeft="59dp"
+             android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/current_time_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="78dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="5:12pm"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginTop="175dp"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hours On"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/hours_on_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="42dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="2 minutes ago"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="210dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/light_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Off"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="65dp"/>
+
+    </LinearLayout>
+
+
+    <!-- Fans-->
+
+    <TextView
+        android:id="@+id/fans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fans"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="150dp"
+        android:textColor="@color/black" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="290dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/on_off_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On/Off"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <Switch
+            android:id="@+id/fans_toggle_switch"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="59dp"
+            android:checked="false"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="325dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/time_text_view_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textSize="20sp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/current_time_text_view_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="78dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="5:12pm"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_marginTop="360dp"
+        android:layout_marginLeft="25dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hours On"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/hours_on_text_view_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="42dp"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="2 minutes ago"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="395dp"
+        android:layout_marginLeft="25dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/fans_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Off"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="65dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="Show Active Time Graph"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:onClick="showGraph"
+        android:textAllCaps="false"
+        android:layout_marginTop="470dp"
+        android:layout_marginLeft="105dp" />
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/light_status_linear_layout"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="420dp"-->
+                <!--android:layout_marginLeft="25dp"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Light Status:"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textColor="@color/black" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/light_status_text_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:text="Off"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textColor="@color/black"/>-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/fan_status_linear_layout"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="460dp"-->
+                <!--android:layout_marginLeft="25dp"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Fan Status:"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textColor="@color/black" />-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/fan_status_text_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:text="Off"-->
+                    <!--android:textSize="20sp"-->
+                    <!--android:textColor="@color/black"/>-->
+            <!--</LinearLayout>-->
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/windowBackground"
+        android:layout_alignParentBottom="true"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@color/white"
+        app:itemTextColor="@color/white"
+        app:menu="@menu/navigation" />
+
+</RelativeLayout>
