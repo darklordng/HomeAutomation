@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -33,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -53,17 +56,21 @@ public class HomeActivity extends AppCompatActivity {
     private AlertDialog.Builder builder;
     private Switch mSwitchLight;
     private SharedPreferences sharedPreferences;
-    private String value, formattedDate, newTime;
+    private String value, formattedDate, newTime, light_type;
     private Boolean switchStateLight;
-    private JSONArray jsonArray;
-    private JSONObject object;
-    private String lightsAPI = "http://172.16.11.161:5000/togglelight";
+    private JSONArray jsonArray, array;
+    private JSONObject object, jsonObject;
+    private Chronometer chronometer;
+    private boolean running;
+    private long pauseOffset;
+    private String lightsAPI = "http://192.168.32.102:5000/togglelight";
     private TextView shared_prefs_name, light_status_text_view,
-            current_time_text_view, current_time_text_view_fans, hours_on_text_view_lights;
+            current_time_text_view, current_time_text_view_fans;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Date currentTime, nTimeCal;
     private DateFormat dateFormat;
     private long fDate, fTime;
+    private double wattsPerBulb;
 
     //Bottom nav
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -104,8 +111,8 @@ public class HomeActivity extends AppCompatActivity {
         light_status_text_view = findViewById(R.id.light_status_text_view);
         current_time_text_view = findViewById(R.id.current_time_text_view);
         current_time_text_view_fans = findViewById(R.id.current_time_text_view_fans);
+        chronometer = findViewById(R.id.chronometer_light);
 
-        hours_on_text_view_lights = findViewById(R.id.hours_on_text_view);
 
         BottomNavigationView navigation =findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -150,6 +157,7 @@ public class HomeActivity extends AppCompatActivity {
                     });
                     light_status_text_view.setText(R.string.light_status_on);
                     current_time_text_view.setText(formattedDate);
+                    startChronometer();
                 }else {
                     //Toast.makeText(context, "OFF", Toast.LENGTH_SHORT).show();
                     try {
@@ -175,15 +183,15 @@ public class HomeActivity extends AppCompatActivity {
                     });
                     nTimeCal = Calendar.getInstance().getTime();
                     newTime = dateFormat.format(nTimeCal);
-                    long nT = (long) Double.parseDouble(newTime);
-                    long fT = (long) Double.parseDouble(formattedDate);
-                    fTime = changeInTime(nT, fT);
-                    Log.d("nT", String.valueOf(nT));
-                    Log.d("fT", String.valueOf(fT));
-                    Log.d("fTime", String.valueOf(fTime));
+//                    long nT = (long) Double.parseDouble(newTime);
+//                    long fT = (long) Double.parseDouble(formattedDate);
+//                    fTime = changeInTime(nT, fT);
+//                    Log.d("nT", String.valueOf(nT));
+//                    Log.d("fT", String.valueOf(fT));
+//                    Log.d("fTime", String.valueOf(fTime));
                     light_status_text_view.setText(R.string.light_status_off);
                     current_time_text_view.setText(newTime);
-                    hours_on_text_view_lights.setText(String.valueOf(fTime));
+                    stopChronometer();
                 }
             }
         });
@@ -201,6 +209,16 @@ public class HomeActivity extends AppCompatActivity {
         //get sharedPrefs from Preference Activity
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         value = sharedPreferences.getString("example_text", "");
+        light_type = sharedPreferences.getString("example_bulb_list", "");
+        if (light_type.equals("LED")) {
+            wattsPerBulb = 8.5;
+        }else if (light_type.equals("Compact Fluorescent Light")) {
+            wattsPerBulb = 14.0;
+        }else if (light_type.equals("Standard Incandescent Light")) {
+            wattsPerBulb = 60.0;
+        }else {
+            return;
+        }
 
         //set sharedPrefs in string value
         shared_prefs_name = findViewById(R.id.shared_prefs_text_view);
@@ -297,6 +315,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonArrayRequest);
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(3* DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
     }
 
 
@@ -318,19 +337,25 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
         requestQueue.add(jsonArrayRequest);
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(3* DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
     }
 
-    public long changeInTime(long cTime, long nTime) {
-        cTime=(long) Double.parseDouble(formattedDate);
+    public void startChronometer() {
+        if (!running) {
+            pauseOffset = 0;
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            running = true;
 
-        Date date = Calendar.getInstance().getTime();
-        DateFormat dFormat = new SimpleDateFormat("HH:MM:SS");
-        String nString = dFormat.format(date);
-        nTime=(long) Double.parseDouble(nString);
+        }
+    }
 
-        long fTime = nTime-cTime;
-        return fTime;
-
+    public void stopChronometer() {
+        if (running) {
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+        }
     }
 
 }

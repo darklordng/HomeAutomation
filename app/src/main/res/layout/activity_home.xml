@@ -74,7 +74,7 @@
          <Switch
              android:id="@+id/lights_toggle_switch"
              android:layout_width="wrap_content"
-             android:layout_marginLeft="59dp"
+             android:layout_marginLeft="80dp"
              android:layout_height="wrap_content" />
 
     </LinearLayout>
@@ -90,7 +90,7 @@
             android:id="@+id/time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"
+            android:text="Time Started"
             android:textSize="20sp"
             android:textColor="@color/black" />
 
@@ -98,7 +98,7 @@
             android:id="@+id/current_time_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
+            android:layout_marginLeft="36dp"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:hint="5:12pm"/>
@@ -115,18 +115,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hours On"
+            android:text="Time On"
             android:textSize="20sp"
             android:textColor="@color/black"/>
 
-        <TextView
-            android:id="@+id/hours_on_text_view"
+        <Chronometer
+            android:id="@+id/chronometer_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
+            android:layout_marginLeft="70dp"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="2 minutes ago"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -151,7 +150,7 @@
             android:hint="Off"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_marginLeft="65dp"/>
+            android:layout_marginLeft="91dp"/>
 
     </LinearLayout>
 
@@ -188,7 +187,7 @@
         <Switch
             android:id="@+id/fans_toggle_switch"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="59dp"
+            android:layout_marginLeft="90dp"
             android:checked="false"
             android:layout_height="wrap_content" />
 
@@ -205,7 +204,7 @@
             android:id="@+id/time_text_view_fans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"
+            android:text="Time Started"
             android:textSize="20sp"
             android:textColor="@color/black" />
 
@@ -213,7 +212,7 @@
             android:id="@+id/current_time_text_view_fans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="78dp"
+            android:layout_marginLeft="36dp"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:hint="5:12pm"/>
@@ -230,18 +229,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hours On"
+            android:text="Time On"
             android:textSize="20sp"
             android:textColor="@color/black"/>
 
-        <TextView
-            android:id="@+id/hours_on_text_view_fans"
+        <Chronometer
+            android:id="@+id/chronometer_fans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
+            android:layout_marginLeft="75dp"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="2 minutes ago"/>
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -266,7 +264,7 @@
             android:hint="Off"
             android:textSize="20sp"
             android:textColor="@color/black"
-            android:layout_marginLeft="65dp"/>
+            android:layout_marginLeft="91dp"/>
 
     </LinearLayout>
 
