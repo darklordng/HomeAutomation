@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.CoordinatorLayout;
@@ -54,18 +56,20 @@ public class HomeActivity extends AppCompatActivity {
     Context context = this;
     private RelativeLayout relativeLayout;
     private AlertDialog.Builder builder;
-    private Switch mSwitchLight;
+    private Switch mSwitchLight, mSwitchFan;
     private SharedPreferences sharedPreferences;
     private String value, formattedDate, newTime, light_type;
-    private Boolean switchStateLight;
+    private Boolean switchStateLight, switchStateFan;
     private JSONArray jsonArray, array;
     private JSONObject object, jsonObject;
     private Chronometer chronometer;
     private boolean running;
     private long pauseOffset;
     private String lightsAPI = "http://192.168.32.102:5000/togglelight";
+    private String fansAPI = "http://192.168.32.102:5000/toggleFan";
     private TextView shared_prefs_name, light_status_text_view,
             current_time_text_view, current_time_text_view_fans;
+    private TextView fans_status_text_view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Date currentTime, nTimeCal;
     private DateFormat dateFormat;
@@ -95,6 +99,7 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(new Intent(this, Graph.class));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,14 +117,93 @@ public class HomeActivity extends AppCompatActivity {
         current_time_text_view = findViewById(R.id.current_time_text_view);
         current_time_text_view_fans = findViewById(R.id.current_time_text_view_fans);
         chronometer = findViewById(R.id.chronometer_light);
+        fans_status_text_view = findViewById(R.id.fans_status_text_view);
 
 
         BottomNavigationView navigation =findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mSwitchLight = findViewById(R.id.lights_toggle_switch);
+        mSwitchFan = findViewById(R.id.fans_toggle_switch);
         switchStateLight = mSwitchLight.isChecked();
+        switchStateFan = mSwitchFan.isChecked();
+
 
         //current_time_text_view_fans.setText(formattedDate);
+
+        mSwitchFan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @SuppressLint("NewApi")
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+//                    Toast.makeText(context, "ON", Toast.LENGTH_SHORT).show();
+                    try {
+                        object.put("changePin", 21);
+                        object.put("action", "on");
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    jsonArray.remove(0);
+                    jsonArray.put(object);
+                    Log.d("jsonArray", jsonArray.toString());
+                    turnOnFans(fansAPI, jsonArray, new VolleyCallback() {
+                        @Override
+                        public void onError(String message) {
+                        }
+
+                        @Override
+                        public void onSuccess(String message) {
+//                            light_status_text_view.setText(R.string.light_status_on);
+//                            current_time_text_view.setText(formattedDate);
+//                            newTime = dateFormat.format(nTimeCal);
+//                            fDate=(long)Double.parseDouble(formattedDate);
+
+//                            fTime=(long)Double.parseDouble(newTime);
+//                            long c = changeInTime(fDate, fTime);
+//                            hours_on_text_view_lights.setText(String.valueOf(c));
+                            //Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+                    fans_status_text_view.setText(R.string.status_on);
+                    current_time_text_view_fans.setText(formattedDate);
+                    startChronometer();
+                }else {
+                    //Toast.makeText(context, "OFF", Toast.LENGTH_SHORT).show();
+                    try {
+                        object.put("changePin", 21);
+                        object.put("action", "off");
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    jsonArray.remove(0);
+                    jsonArray.put(object);
+                    Log.d("offJsonArray", jsonArray.toString());
+                    turnOffFans(fansAPI, jsonArray, new VolleyCallback() {
+                        @Override
+                        public void onError(String message) {
+                        }
+
+                        @Override
+                        public void onSuccess(String message) {
+//                            light_status_text_view.setText(R.string.light_status_off);
+//                            current_time_text_view.setText(formattedDate);
+                            //Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    nTimeCal = Calendar.getInstance().getTime();
+                    newTime = dateFormat.format(nTimeCal);
+//                    long nT = (long) Double.parseDouble(newTime);
+//                    long fT = (long) Double.parseDouble(formattedDate);
+//                    fTime = changeInTime(nT, fT);
+//                    Log.d("nT", String.valueOf(nT));
+//                    Log.d("fT", String.valueOf(fT));
+//                    Log.d("fTime", String.valueOf(fTime));
+                    fans_status_text_view.setText(R.string.status_off);
+                    current_time_text_view_fans.setText(newTime);
+                    stopChronometer();
+                }
+            }
+        });
 
         mSwitchLight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @SuppressLint("NewApi")
@@ -155,7 +239,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
 
                     });
-                    light_status_text_view.setText(R.string.light_status_on);
+                    light_status_text_view.setText(R.string.status_on);
                     current_time_text_view.setText(formattedDate);
                     startChronometer();
                 }else {
@@ -189,7 +273,7 @@ public class HomeActivity extends AppCompatActivity {
 //                    Log.d("nT", String.valueOf(nT));
 //                    Log.d("fT", String.valueOf(fT));
 //                    Log.d("fTime", String.valueOf(fTime));
-                    light_status_text_view.setText(R.string.light_status_off);
+                    light_status_text_view.setText(R.string.status_off);
                     current_time_text_view.setText(newTime);
                     stopChronometer();
                 }
@@ -340,6 +424,48 @@ public class HomeActivity extends AppCompatActivity {
         jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(3* DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
     }
 
+    public void turnOnFans(String url, JSONArray array, final VolleyCallback callback) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+            JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(com.android.volley.Request.Method.POST, url,
+                    array, new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    Toast.makeText(context, "Fans On", Toast.LENGTH_SHORT).show();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                    Log.d("Err", error.toString());
+
+                }
+            });
+            requestQueue.add(jsonArrayRequest);
+            jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(3* DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+        }
+
+    public void turnOffFans(String url, JSONArray array, final VolleyCallback callback) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(com.android.volley.Request.Method.POST, url,
+                array, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                Toast.makeText(context, "Fans On", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
+                Log.d("Err", error.toString());
+
+            }
+        });
+        requestQueue.add(jsonArrayRequest);
+        jsonArrayRequest.setRetryPolicy(new DefaultRetryPolicy(3* DefaultRetryPolicy.DEFAULT_TIMEOUT_MS, 0, 0));
+    }
+
     public void startChronometer() {
         if (!running) {
             pauseOffset = 0;
@@ -356,6 +482,10 @@ public class HomeActivity extends AppCompatActivity {
             pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
             running = false;
         }
+    }
+
+    public void calc () {
+
     }
 
 }
